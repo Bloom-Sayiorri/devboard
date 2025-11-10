@@ -15,32 +15,167 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String
-  email    String
-  password String
-  avatar   String?
-  Board    Board  @relation(fields: [boardId], references: [id])
-  boardId  Int
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?   // optionnal for non oauth users
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  boards        BoardMember[]
+  tasks         Task[]         @relation("AssignedTasks")
+  comments      Comment[]
+  notifications Notification[]
+
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
 }
 
 model Board {
-  id    Int     @id @default(autoincrement())
-  name  String
-  image String?
-  tasks Task[]
-  users User[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  image       String?
+  visibility  VISIBILITY @default(PUBLIC)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members BoardMember[]
+  tasks   Task[]
+  sprints Sprint[]
+}
+
+model BoardMember {
+  id   Int  @id @default(autoincrement())
+  role ROLE @default(REGULAR)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  board   Board @relation(fields: [boardId], references: [id])
+  boardId Int
 }
 
 model Task {
-  id         Int      @id @default(autoincrement())
-  name       String
+  id          Int       @id @default(autoincrement())
+  title       String
   description String?
-  status String @default("todo")
-  createdAt DateTime
-  updatedAt DateTime
-  Board      Board   @relation(fields: [boardId], references: [id])
-  boardId    Int
+  priority    PRIORITY  @default(MEDIUM)
+  status      STATUS    @default(PENDING)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  board   Board @relation(fields: [boardId], references: [id])
+  boardId Int
+
+  sprint   Sprint? @relation(fields: [sprintId], references: [id])
+  sprintId Int?
+
+  assignedTo   User?   @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  assignedToId String?
+
+  parentTask   Task?  @relation("Subtasks", fields: [parentTaskId], references: [id])
+  parentTaskId Int?
+  subtasks     Task[] @relation("Subtasks")
+
+  comments Comment[]
+  labels   TaskLabel[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Label {
+  id    Int     @id @default(autoincrement())
+  name  String
+  color String?
+
+  tasks TaskLabel[]
+}
+
+model TaskLabel {
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+
+  label   Label @relation(fields: [labelId], references: [id])
+  labelId Int
+
+  @@id([taskId, labelId])
+}
+
+model Sprint {
+  id        Int      @id @default(autoincrement())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  goal      String?
+
+  board   Board @relation(fields: [boardId], references: [id])
+  boardId Int
+
+  tasks Task[]
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 enum ROLE {
@@ -49,8 +184,21 @@ enum ROLE {
 }
 
 enum STATUS {
-  STARTED
   PENDING
-  DONE
+  STARTED
   ONGOING
+  DONE
+}
+
+enum PRIORITY {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum VISIBILITY {
+  PRIVATE
+  PUBLIC
+  TEAM
 }
