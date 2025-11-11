@@ -1,74 +1,3 @@
-// "use client";
-
-// import Link from "next/link";
-// import Logo from "./logo";
-// import { Bell, CircleQuestionMark, Moon, Settings, SunMedium } from "lucide-react";
-// import { IoMenu } from "react-icons/io5";
-// import { useState } from "react";
-// import Sidebar from "./sidebar";
-// import { useSession, signOut } from "next-auth/react";
-
-// export default function Navbar() {
-// 	const [toggle, setToggle] = useState<boolean>(false);
-
-// 	const handleToggle = () => {
-// 		setToggle((prev) => !prev);
-// 		console.log(toggle);
-// 	};
-
-// 	const { data: session } = useSession();
-
-// 	const handleSignout = async () => {
-// 		await signOut({ callbackUrl: "/login" });
-// 	};
-
-// 	return (
-// 		<div className="relative">
-// 			<header className="flex justify-between py-1.5 px-3">
-// 				<div className="flex gap-3 items-center">
-// 					<IoMenu className="h-8 w-7 cursor-pointer" onClick={handleToggle} />
-// 					<Link href="/" className="">
-// 						<Logo />
-// 					</Link>
-// 				</div>
-
-// 				<nav className="flex gap-2">
-// 					<div>
-// 						<Link href="/">Home</Link>
-// 						<Link href="/boards">Boards</Link>
-// 						<Link href="/about">About</Link>
-// 					</div>
-// 					<div>
-// 						{session?.user ? (
-// 							<button onClick={handleSignout} className="text-red-500 hover:text-red-600">
-// 								Sign Out
-// 							</button>
-// 						) : (
-// 							<Link href="/login" className="text-blue-500 hover:text-blue-600">
-// 								Login
-// 							</Link>
-// 						)}
-// 					</div>
-// 					{/* Puth these in a modal opened in mobile view */}
-// 					<div className="flex">
-// 						<Link href="/boards/notifications">
-// 							<Bell />
-// 						</Link>
-// 						<Link href="/boards/help">
-// 							<CircleQuestionMark />
-// 						</Link>
-// 						<Link href="/boards/settings">
-// 							<Settings />
-// 						</Link>
-// 						<Link href="/boards/profile">profile</Link>
-// 					</div>
-// 				</nav>
-// 			</header>
-// 			{toggle ? <Sidebar /> : null}
-// 		</div>
-// 	);
-// }
-
 "use client";
 
 import Link from "next/link";
@@ -78,19 +7,29 @@ import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Sidebar from "./sidebar";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { data: session } = useSession();
 
 	const handleSignout = async () => {
 		await signOut({ callbackUrl: "/login" });
 	};
 
+	const links = [
+		{ href: "/", label: "Home" },
+		{ href: "/boards", label: "Boards" },
+		{ href: "/about", label: "About" },
+	];
+
 	return (
-		<header className="w-full border-b border-gray-200 bg-white dark:bg-gray-900 fixed top-0 left-0 z-50">
-			<div className="flex justify-between items-center px-4 py-3 max-w-7xl mx-auto">
+		<header className="w-full border-b border-gray-200 bg-white dark:bg-gray-900">
+			<div className="flex justify-between items-center px-3 py-3">
 				{/* Left - Logo + Sidebar Toggle */}
 				{/* <div className="flex items-center gap-3"> */}
 				{/* Sidebar icon only visible on small screens */}
@@ -100,45 +39,94 @@ export default function Navbar() {
 				</Link>
 				{/* </div> */}
 
-				<h1 className="font-shortstack text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
+				<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
 					Dev<span className="">Board</span>
 				</h1>
 
 				{/* Center Nav (hidden on mobile) */}
-				<nav className="hidden sm:flex gap-6 items-center text-gray-800 dark:text-gray-200">
-					<Link href="/">Home</Link>
-					<Link href="/boards">Boards</Link>
-					<Link href="/about">About</Link>
+				<nav className="hidden sm:flex gap-3 items-center text-gray-800 dark:text-gray-200">
+					{links.map(({ href, label }) => {
+						const isActive = pathname === href;
+
+						return (
+							<Link
+								key={href}
+								href={href}
+								className={`font-medium transition ${
+									isActive ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500 hover:text-blue-500"
+								}`}>
+								{label}
+							</Link>
+						);
+					})}
 					{session?.user ? (
-						<button onClick={handleSignout} className="text-red-500 hover:text-red-600 font-medium">
+						<button
+							onClick={handleSignout}
+							className="text-white bg-red-500 hover:text-red-600 hover:bg-transparent border border-red-600 px-4 py-1.5 rounded-lg">
 							Sign Out
 						</button>
 					) : (
-						<Link href="/login" className="text-blue-500 hover:text-blue-600 font-medium">
+						<Link
+							href="/login"
+							className="text-white bg-green-500 hover:text-green-600 hover:bg-transparent border hover:border-green-600 px-4 py-1.5 rounded-lg">
 							Login
 						</Link>
 					)}
+					{
+						session?.user && (
+						<button className="" onClick={() => setIsModalOpen((prev) => !prev)}>
+							<Image
+								// src="next.svg"
+								src={session?.user?.image!}
+								alt={session?.user?.name!}
+								height={30}
+								width={30}
+								className="cursor-pointer"
+							/>
+						</button>
+						)
+					}
+					{isModalOpen ? (
+						<div className="absolute top-14 right-1 mt-2 w-38 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 flex flex-col justify-center items-start gap-3 text-gray-700 dark:text-gray-300 z-50">
+							{/* <Link
+								href="/boards/analytics"
+								className="flex items-center gap-2 hover:text-blue-500 transition"
+								onClick={() => setIsModalOpen(false)}>
+								<Bell className="w-4 h-4" /> Analytics
+							</Link>
+							<Link
+								href="/boards/notifications"
+								className="flex items-center gap-2 hover:text-blue-500 transition"
+								onClick={() => setIsModalOpen(false)}>
+								<Bell className="w-4 h-4" /> Notifications
+							</Link>
+							<Link
+								href="/boards/settings"
+								className="flex items-center gap-2 hover:text-blue-500 transition"
+								onClick={() => setIsModalOpen(false)}>
+								<Settings className="w-4 h-4" /> Settings
+							</Link>
+							<Link
+								href="/boards/tasks"
+								className="flex items-center gap-2 hover:text-blue-500 transition"
+								onClick={() => setIsModalOpen(false)}>
+								<CircleQuestionMark className="w-4 h-4" /> Tasks
+							</Link> */}
+							<Link
+								href="/user/profile"
+								className="flex items-center gap-2 hover:text-blue-500 transition"
+								onClick={() => setIsModalOpen(false)}>
+								Profile
+							</Link>
+						</div>
+					) : (
+						<></>
+					)}
 				</nav>
-
-				{/* Right icons (hidden on mobile) */}
-				<div className="hidden sm:flex items-center gap-3 text-gray-700 dark:text-gray-300">
-					<Link href="/boards/notifications">
-						<Bell className="w-5 h-5" />
-					</Link>
-					<Link href="/boards/help">
-						<CircleQuestionMark className="w-5 h-5" />
-					</Link>
-					<Link href="/boards/settings">
-						<Settings className="w-5 h-5" />
-					</Link>
-					<Link href="/boards/profile" className="text-sm">
-						Profile
-					</Link>
-				</div>
 
 				{/* Mobile Menu Button */}
 				<button
-					className="sm:hidden flex items-center justify-center w-8 h-8 text-gray-800 dark:text-gray-200"
+					className="flex sm:hidden items-center justify-center w-8 h-8 text-gray-800 dark:text-gray-200 cursor-pointer"
 					onClick={() => setMenuOpen(true)}>
 					<IoMenu className="w-6 h-6" />
 				</button>
@@ -149,8 +137,8 @@ export default function Navbar() {
 
 			{/* Modal for Mobile Navigation */}
 			{menuOpen && (
-				<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-end">
-					<div className="w-3/4 sm:w-1/3 bg-white dark:bg-gray-800 h-full p-6 flex flex-col justify-between">
+				<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-end w-full">
+					<div className="w-[70%] sm:w-1/3 bg-white dark:bg-gray-800 h-full p-6 flex flex-col justify-between">
 						{/* Header */}
 						<div className="flex justify-between items-center mb-6">
 							<h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Menu</h2>
@@ -160,16 +148,22 @@ export default function Navbar() {
 						</div>
 
 						{/* Nav Links */}
-						<nav className="flex flex-col gap-4 text-gray-700 dark:text-gray-200 text-lg">
-							<Link href="/" onClick={() => setMenuOpen(false)}>
-								Home
-							</Link>
-							<Link href="/boards" onClick={() => setMenuOpen(false)}>
-								Boards
-							</Link>
-							<Link href="/about" onClick={() => setMenuOpen(false)}>
-								About
-							</Link>
+						<nav className="flex flex-col gap-4 text-gray-700 dark:text-gray-200 text-lg w-1/2">
+							{links.map(({ href, label }) => {
+								const isActive = pathname === href;
+
+								return (
+									<Link
+										key={href}
+										href={href}
+										onClick={() => setMenuOpen(false)}
+										className={`font-medium transition ${
+											isActive ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-500 hover:text-blue-500"
+										}`}>
+										{label}
+									</Link>
+								);
+							})}
 							<hr className="border-gray-300 dark:border-gray-700" />
 							{session?.user ? (
 								<button
@@ -177,11 +171,14 @@ export default function Navbar() {
 										setMenuOpen(false);
 										handleSignout();
 									}}
-									className="text-red-500 text-left">
+									className="text-white bg-red-500 hover:text-red-600 hover:bg-transparent border border-red-600 px-4 py-1.5 rounded-lg">
 									Sign Out
 								</button>
 							) : (
-								<Link href="/login" onClick={() => setMenuOpen(false)}>
+								<Link
+									href="/login"
+									onClick={() => setMenuOpen(false)}
+									className="text-white bg-green-500 hover:text-green-600 hover:bg-transparent border hover:border-green-600 px-4 py-1.5 rounded-lg">
 									Login
 								</Link>
 							)}
@@ -200,12 +197,11 @@ export default function Navbar() {
 							</Link>
 							<Link href="/boards/profile" onClick={() => setMenuOpen(false)}>
 								Profile
-							</Link> 
+							</Link>
 						</div>
 					</div>
 				</div>
 			)}
 		</header>
 	);
-
 }

@@ -125,7 +125,7 @@ export default function Board() {
 	const columnOrder = Object.keys(columns);
 
 	return (
-		<div className="p-4">
+		<div className="mt-4 p-4 w-full">
 			<h2 className="text-2xl font-bold mb-4">Kanban Board</h2>
 			<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

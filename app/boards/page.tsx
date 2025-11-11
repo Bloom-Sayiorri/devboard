@@ -14,7 +14,7 @@ export default function Page() {
 	};
 
 	return (
-		<div className="flex flex-col gap-2 h-full px-3">
+		<div className="">
 			{/* <header className="flex items-center justify-between">
 				<div className="flex gap-2">
 					<span className="">My board</span>

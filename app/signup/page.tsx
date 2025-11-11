@@ -43,7 +43,7 @@ export default function Signup() {
 			<section className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col gap-6">
 				{/* Header */}
 				<div className="text-center">
-					<h1 className="text-3xl sm:text-4xl font-bold text-blue-600">Join Us Today</h1>
+					<h1 className="text-3xl sm:text-4xl font-bold text-blue-600">New To DevBoard ?</h1>
 					<p className="text-slate-600 mt-2">Sign in to continue to DevBoard</p>
 				</div>
 
