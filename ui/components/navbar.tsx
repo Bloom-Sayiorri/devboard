@@ -34,14 +34,14 @@ export default function Navbar() {
 				{/* <div className="flex items-center gap-3"> */}
 				{/* Sidebar icon only visible on small screens */}
 				{/* <IoMenu className="h-7 w-7 cursor-pointer sm:hidden" onClick={() => setSidebarOpen((prev) => !prev)} /> */}
-				<Link href="/" className="flex items-center gap-1 text-lg font-semibold">
-					<Logo />
-				</Link>
-				{/* </div> */}
-
-				<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
-					Dev<span className="">Board</span>
-				</h1>
+				<div className="flex gap-2 items-center justify-center">
+					<Link href="/" className="flex items-center gap-1 text-lg font-semibold">
+						<Logo />
+					</Link>
+					<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
+						Dev<span className="">Board</span>
+					</h1>
+				</div>
 
 				{/* Center Nav (hidden on mobile) */}
 				<nav className="hidden sm:flex gap-3 items-center text-gray-800 dark:text-gray-200">
@@ -73,18 +73,13 @@ export default function Navbar() {
 						</Link>
 					)}
 					{
-						session?.user && (
-						<button className="" onClick={() => setIsModalOpen((prev) => !prev)}>
-							<Image
-								// src="next.svg"
-								src={session?.user?.image!}
-								alt={session?.user?.name!}
-								height={30}
-								width={30}
-								className="cursor-pointer"
-							/>
+						// session?.user && (
+						<button
+							className="relative w-10 h-10 rounded-full overflow-hidden shadow-md"
+							onClick={() => setIsModalOpen((prev) => !prev)}>
+							<Image src="/profile.jpg" alt="Creator" fill sizes="28px" className="object-cover rounded-full" />
 						</button>
-						)
+						// )
 					}
 					{isModalOpen ? (
 						<div className="absolute top-14 right-1 mt-2 w-38 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 flex flex-col justify-center items-start gap-3 text-gray-700 dark:text-gray-300 z-50">
@@ -205,3 +200,4 @@ export default function Navbar() {
 		</header>
 	);
 }
+
