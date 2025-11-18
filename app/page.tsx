@@ -18,8 +18,10 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle, Bell, LayoutGrid, Users } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function HomePage() {
+	const { data: session } = useSession();
 	return (
 		<div className="min-h-screen flex flex-col">
 			{/* Hero Section */}
@@ -41,11 +43,15 @@ export default function HomePage() {
 						className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition">
 						Get Started Free
 					</Link>
-					<Link
-						href="/login"
-						className="border border-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition">
-						Log In
-					</Link>
+					{session?.user ? (
+						<></>
+					) : (
+						<Link
+							href="/login"
+							className="border border-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition">
+							Log In
+						</Link>
+					)}
 				</div>
 			</section>
 

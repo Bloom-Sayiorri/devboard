@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import Logo from "./logo";
-import { Bell, CircleQuestionMark, Moon, Settings, SunMedium, X } from "lucide-react";
+import { Bell, CircleQuestionMark, CircleUserRound, Moon, Settings, SunMedium, X } from "lucide-react";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Sidebar from "./sidebar";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
+	const router = useRouter();
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,12 +36,12 @@ export default function Navbar() {
 				{/* Sidebar icon only visible on small screens */}
 				{/* <IoMenu className="h-7 w-7 cursor-pointer sm:hidden" onClick={() => setSidebarOpen((prev) => !prev)} /> */}
 				<div className="flex gap-2 items-center justify-center">
+					<Logo />
 					<Link href="/" className="flex items-center gap-1 text-lg font-semibold">
-						<Logo />
+						<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
+							Dev<span className="">Board</span>
+						</h1>
 					</Link>
-					<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
-						Dev<span className="">Board</span>
-					</h1>
 				</div>
 
 				{/* Center Nav (hidden on mobile) */}
@@ -66,20 +67,32 @@ export default function Navbar() {
 							Sign Out
 						</button>
 					) : (
-						<Link
-							href="/login"
-							className="text-white bg-green-500 hover:text-green-600 hover:bg-transparent border hover:border-green-600 px-4 py-1.5 rounded-lg">
-							Login
-						</Link>
+						<button
+							disabled={session?.user ? true : false}
+							onClick={() => router.push("/signup")}
+							className="text-white bg-green-500 hover:text-green-600 hover:bg-transparent border hover:border-green-600 px-4 py-1.5 rounded-lg disabled:pointer-events-none">
+							Signup
+						</button>
 					)}
 					{
 						// session?.user && (
-						<button
-							className="relative w-10 h-10 rounded-full overflow-hidden shadow-md"
-							onClick={() => setIsModalOpen((prev) => !prev)}>
-							<Image src="/profile.jpg" alt="Creator" fill sizes="28px" className="object-cover rounded-full" />
-						</button>
+						// <button
+						// 	className="relative w-10 h-10 rounded-full overflow-hidden shadow-md cursor-pointer"
+						// 	onClick={() => setIsModalOpen((prev) => !prev)}>
+						// 	<Image src="/profile.jpg" alt="Creator" fill sizes="28px" className="object-cover rounded-full" />
+						// </button>
 						// )
+						<button
+							className="relative w-10 h-10 rounded-full overflow-hidden shadow-md cursor-pointer flex items-center justify-center bg-gray-200 dark:bg-gray-700"
+							onClick={() => setIsModalOpen((prev) => !prev)}>
+							{/* If user has image */}
+							{session?.user?.image ? (
+								<Image src={session.user.image} alt="User" fill sizes="40px" className="object-cover rounded-full" />
+							) : (
+								// If no image render Lucide icon
+								<CircleUserRound className="w-7 h-7 text-gray-500" />
+							)}
+						</button>
 					}
 					{isModalOpen ? (
 						<div className="absolute top-14 right-1 mt-2 w-38 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 flex flex-col justify-center items-start gap-3 text-gray-700 dark:text-gray-300 z-50">
@@ -199,5 +212,5 @@ export default function Navbar() {
 			)}
 		</header>
 	);
-}
 
+}

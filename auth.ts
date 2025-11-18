@@ -23,7 +23,7 @@ export const { handlers, auth } = NextAuth({
 		strategy: "database",
 	},
 	pages: {
-		signIn: '/login',
+		signIn: '/signup',
 		// signOut: "/"
 	},
 	callbacks: {

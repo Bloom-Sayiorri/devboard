@@ -1,18 +1,26 @@
-// export { auth as middleware } from "@/auth"
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-import { auth } from "@/auth";
+export async function middleware(req: NextRequest) {
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+	const url = req.nextUrl.clone();
 
-// This ensures the middleware runs on Node.js runtime
+	// Public routes
+	const publicPaths = ["/", "/about", "/signup", "/login"];
+	if (publicPaths.includes(url.pathname) || url.pathname.startsWith("/_next") || url.pathname === "/favicon.ico") {
+		return NextResponse.next();
+	}
+
+	// Redirect to signup if no session
+	if (!token) {
+		url.pathname = "/signup";
+		return NextResponse.redirect(url);
+	}
+
+	return NextResponse.next();
+}
+
 export const config = {
-	matcher: ["/signup", "/login"], // adjust routes
-	runtime: "nodejs", // <--- important
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|$).*)"],
+	runtime: "nodejs", // optional, ensures Node runtime
 };
-
-export default auth;
-
-// export { auth as middleware } from "@/auth";
-
-// export const config = {
-// 	matcher: ["/", "/boards/:path*", "/profile/:path*"],
-// 	runtime: "nodejs", // 👈 required for Prisma
-// };
