@@ -1,9 +1,7 @@
 "use client";
 
-import Logo from "@/ui/components/logo";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 

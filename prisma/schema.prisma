@@ -19,7 +19,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime?
-  password      String?   // optionnal for non oauth users
+  password      String? // optional for non-auth users
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

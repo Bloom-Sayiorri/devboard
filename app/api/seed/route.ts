@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const user = await prisma.user.create({
       data: {
-        username: "admin",
+        name: "admin",
         email: "admin@example.com",
         password: "hashed_password_here",
       },
@@ -61,7 +61,7 @@ export async function GET() {
     });
 
     return NextResponse.json({ message: "Seed complete!" });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: JSON.stringify(error.message) }, { status: 500 });
   }
 }
