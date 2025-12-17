@@ -44,7 +44,6 @@ export default function Navbar() {
 					</Link>
 				</div>
 
-				{/* Center Nav (hidden on mobile) */}
 				<nav className="hidden sm:flex gap-3 items-center text-gray-800 dark:text-gray-200">
 					{links.map(({ href, label }) => {
 						const isActive = pathname === href;
@@ -120,19 +119,23 @@ export default function Navbar() {
 								onClick={() => setIsModalOpen(false)}>
 								<CircleQuestionMark className="w-4 h-4" /> Tasks
 							</Link> */}
-							<Link
-								href="/user/profile"
-								className="flex items-center gap-2 hover:text-blue-500 transition"
-								onClick={() => setIsModalOpen(false)}>
-								Profile
-							</Link>
+							{session?.user ? (
+								<Link
+									href="/user/profile"
+									className="flex items-center gap-2 hover:text-blue-500 transition"
+									// onClick={() => setIsModalOpen(false)}
+									>
+									Profile
+								</Link>
+							) : (
+								<></>
+							)}
 						</div>
 					) : (
 						<></>
 					)}
 				</nav>
 
-				{/* Mobile Menu Button */}
 				<button
 					className="flex sm:hidden items-center justify-center w-8 h-8 text-gray-800 dark:text-gray-200 cursor-pointer"
 					onClick={() => setMenuOpen(true)}>
@@ -140,10 +143,8 @@ export default function Navbar() {
 				</button>
 			</div>
 
-			{/* Sidebar Drawer (Optional for your use case) */}
 			{sidebarOpen && <Sidebar />}
 
-			{/* Modal for Mobile Navigation */}
 			{menuOpen && (
 				<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-end w-full">
 					<div className="w-[70%] sm:w-1/3 bg-white dark:bg-gray-800 h-full p-6 flex flex-col justify-between">
@@ -192,7 +193,6 @@ export default function Navbar() {
 							)}
 						</nav>
 
-						{/* Icons at bottom */}
 						<div className="flex justify-around mt-8 text-gray-600 dark:text-gray-300">
 							<Link href="/boards/notifications" onClick={() => setMenuOpen(false)}>
 								<Bell />
@@ -212,5 +212,4 @@ export default function Navbar() {
 			)}
 		</header>
 	);
-
 }

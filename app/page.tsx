@@ -1,18 +1,3 @@
-// import Image from "next/image";
-
-// export default function Home() {
-// 	return (
-// 		<div className="h-full">
-// 			<h2>Home</h2>
-// 			<div className="">
-// 				<button type="submit" className="text-white bg-blue-400 rounded-lg px-4 py-2">
-// 					Submit
-// 				</button>
-// 			</div>
-// 		</div>
-// 	);
-// }
-
 "use client";
 
 import Link from "next/link";
@@ -24,7 +9,6 @@ export default function HomePage() {
 	const { data: session } = useSession();
 	return (
 		<div className="min-h-screen flex flex-col">
-			{/* Hero Section */}
 			<section className="flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 text-white">
 				<motion.h1
 					className="text-4xl md:text-6xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200"
@@ -55,7 +39,6 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* Features */}
 			<section className="px-6 py-16 bg-white text-gray-800">
 				<h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Why Devboard?</h2>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -93,14 +76,12 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* Preview Section */}
 			<section className="bg-gray-50 py-16 px-6 flex flex-col items-center text-center">
 				<h2 className="text-3xl font-bold mb-6">Plan visually with drag-and-drop boards</h2>
 				<p className="max-w-2xl text-gray-600 mb-10">
 					Devboard makes project tracking easy — move tasks, assign teammates, and monitor sprint progress in real-time.
 				</p>
 				<div className="w-full max-w-4xl aspect-video rounded-2xl overflow-hidden border-2 border-gray-200 shadow-md bg-gray-100">
-					{/* You could replace this div with an image or animated demo later */}
 					<div className="flex items-center justify-center h-full text-gray-400 italic">Board Preview Coming Soon</div>
 				</div>
 			</section>

@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server.js";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+	const id = (await params).id;
 	try {
 		const user = await prisma.user.findUnique({
-			where: { id: params.id },
+			where: { id },
 			include: {
 				boards: true,
 				tasks: true,
@@ -25,7 +26,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 	}
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+	const id = (await params).id;
 	try {
 		const body = await req.json();
 		const { name, email, password, image } = body;
@@ -41,7 +43,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 		}
 
 		const updatedUser = await prisma.user.update({
-			where: { id: params.id },
+			where: { id: id },
 			data: updateData,
 		});
 
@@ -52,10 +54,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 	}
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+	const id = (await params).id;
 	try {
 		await prisma.user.delete({
-			where: { id: params.id },
+			where: { id: id },
 		});
 
 		return NextResponse.json({ message: "User deleted successfully" }, { status: 200 });

@@ -1,9 +1,12 @@
 "use client";
 
+// import { auth } from "@/auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default  function Page() {
+	// const session = await auth();
+	// console.log("session:", session);
 	const router = useRouter();
 	return (
 		<div className="min-h-full">
@@ -116,4 +119,5 @@ export default function Page() {
 			</div>
 		</div>
 	);
+
 }

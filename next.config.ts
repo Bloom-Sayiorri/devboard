@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ["lh3.googleusercontent.com"],
 	},
+	// defaultRuntime: "nodejs",
 };
 
 export default nextConfig;
-

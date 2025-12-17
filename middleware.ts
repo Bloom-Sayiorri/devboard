@@ -1,5 +1,5 @@
 import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server.js";
 
 export async function middleware(req: NextRequest) {
 	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -21,6 +21,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|$).*)"],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|$).*)", "/user/:path*"],
 	runtime: "nodejs", // optional, ensures Node runtime
+
 };

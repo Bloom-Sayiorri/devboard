@@ -1,9 +1,3 @@
-// export default function Page() {
-//     return (
-//         <div>About</div>
-//     );
-// }
-
 "use client";
 
 import Image from "next/image";
@@ -13,7 +7,6 @@ import { motion } from "framer-motion";
 export default function AboutPage() {
 	return (
 		<section className="min-h-screen flex flex-col items-center justify-center px-6 py-16 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100">
-			{/* Hero */}
 			<div className="max-w-5xl text-center mb-12">
 				<motion.h1
 					initial={{ opacity: 0, y: -20 }}
@@ -29,7 +22,6 @@ export default function AboutPage() {
 				</p>
 			</div>
 
-			{/* Features / Mission Section */}
 			<div className="grid md:grid-cols-3 gap-8 max-w-5xl w-full">
 				{[
 					{
@@ -62,7 +54,6 @@ export default function AboutPage() {
 				))}
 			</div>
 
-			{/* Team / Creator Section */}
 			<div className="max-w-4xl mt-16 text-center">
 				<h2 className="text-3xl font-semibold mb-6">Meet the Creator</h2>
 				<div className="flex flex-col md:flex-row items-center justify-center gap-8">
@@ -76,10 +67,10 @@ export default function AboutPage() {
 							is a reflection of my mission to make project management seamless for engineering teams.
 						</p>
 						<div className="flex gap-4 mt-4">
-							<Link href="https://github.com/" target="_blank" className="text-blue-500 hover:underline">
+							<Link href="https://github.com/bloom-sayiorri" target="_blank" className="text-blue-500 hover:underline">
 								GitHub
 							</Link>
-							<Link href="https://linkedin.com/" target="_blank" className="text-blue-500 hover:underline">
+							<Link href="https://www.linkedin.com/in/bloom-sayiorri" target="_blank" className="text-blue-500 hover:underline">
 								LinkedIn
 							</Link>
 						</div>
@@ -87,7 +78,6 @@ export default function AboutPage() {
 				</div>
 			</div>
 
-			{/* CTA */}
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
 				whileInView={{ opacity: 1, y: 0 }}
@@ -103,4 +93,3 @@ export default function AboutPage() {
 		</section>
 	);
 }
-
