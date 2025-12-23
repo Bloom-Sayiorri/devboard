@@ -14,7 +14,6 @@ export default function Navbar() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
-	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { data: session } = useSession();
 
@@ -31,10 +30,6 @@ export default function Navbar() {
 	return (
 		<header className="w-full border-b border-gray-200 bg-white dark:bg-gray-900">
 			<div className="flex justify-between items-center px-3 py-3">
-				{/* Left - Logo + Sidebar Toggle */}
-				{/* <div className="flex items-center gap-3"> */}
-				{/* Sidebar icon only visible on small screens */}
-				{/* <IoMenu className="h-7 w-7 cursor-pointer sm:hidden" onClick={() => setSidebarOpen((prev) => !prev)} /> */}
 				<div className="flex gap-2 items-center justify-center">
 					<Logo />
 					<Link href="/" className="flex items-center gap-1 text-lg font-semibold">
@@ -74,13 +69,6 @@ export default function Navbar() {
 						</button>
 					)}
 					{
-						// session?.user && (
-						// <button
-						// 	className="relative w-10 h-10 rounded-full overflow-hidden shadow-md cursor-pointer"
-						// 	onClick={() => setIsModalOpen((prev) => !prev)}>
-						// 	<Image src="/profile.jpg" alt="Creator" fill sizes="28px" className="object-cover rounded-full" />
-						// </button>
-						// )
 						<button
 							className="relative w-10 h-10 rounded-full overflow-hidden shadow-md cursor-pointer flex items-center justify-center bg-gray-200 dark:bg-gray-700"
 							onClick={() => setIsModalOpen((prev) => !prev)}>
@@ -88,7 +76,6 @@ export default function Navbar() {
 							{session?.user?.image ? (
 								<Image src={session.user.image} alt="User" fill sizes="40px" className="object-cover rounded-full" />
 							) : (
-								// If no image render Lucide icon
 								<CircleUserRound className="w-7 h-7 text-gray-500" />
 							)}
 						</button>
@@ -142,8 +129,6 @@ export default function Navbar() {
 					<IoMenu className="w-6 h-6" />
 				</button>
 			</div>
-
-			{sidebarOpen && <Sidebar />}
 
 			{menuOpen && (
 				<div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-end w-full">

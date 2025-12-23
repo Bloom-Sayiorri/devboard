@@ -1,13 +1,22 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 export default function Signup() {
+	const router = useRouter();
+	const { status } = useSession();
 	const [userData, setUserData] = useState({ name: "", email: "", password: "" });
 	const [errors, setErrors] = useState("");
+
+	useEffect(() => {
+		if (status === "authenticated") {
+			router.push("/");
+		}
+	}, [status, router]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
@@ -23,13 +32,7 @@ export default function Signup() {
 			body: JSON.stringify({ name, email, password }),
 		});
 		if (res.ok) {
-			await signIn("credentials", {
-				name: userData.name,
-				email: userData.email,
-				password: userData.password,
-				redirect: true,
-				callbackUrl: "/",
-			});
+			router.push("/login");
 		} else {
 			const error = await res.json();
 			setErrors(JSON.stringify(error));
@@ -45,7 +48,6 @@ export default function Signup() {
 					<p className="text-slate-600 mt-2">Sign in to continue to DevBoard</p>
 				</div>
 
-				{/* Google Button */}
 				<button
 					type="button"
 					onClick={() => signIn("google", { callbackUrl: "/" })}
@@ -54,14 +56,12 @@ export default function Signup() {
 					<span>Sign in with Google</span>
 				</button>
 
-				{/* Divider */}
 				<div className="flex items-center gap-3">
 					<hr className="flex-1 border-gray-300" />
 					<span className="text-gray-500 text-sm">OR</span>
 					<hr className="flex-1 border-gray-300" />
 				</div>
 
-				{/* Form */}
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 					<div>
 						<label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -114,17 +114,16 @@ export default function Signup() {
 					<button
 						type="submit"
 						className="mt-2 w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition">
-						Sign In
+						Submit
 					</button>
 
 					{errors && <p className="text-red-500 text-sm text-center mt-2">{errors}</p>}
 				</form>
 
-				{/* Footer */}
 				<p className="text-center text-gray-600 text-sm mt-2">
-					Don’t have an account?{" "}
-					<Link href="/signup" className="text-blue-600 hover:underline">
-						Sign up
+					Already have an account?{" "}
+					<Link href="/login" className="text-blue-600 hover:underline">
+						Login
 					</Link>
 				</p>
 			</section>

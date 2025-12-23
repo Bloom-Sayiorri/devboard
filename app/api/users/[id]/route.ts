@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server.js";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
+type UserUpdateData = {
+	name?: string;
+	email?: string;
+	password?: string;
+	image?: string;
+};
+
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	const id = (await params).id;
 	try {
@@ -32,7 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 		const body = await req.json();
 		const { name, email, password, image } = body;
 
-		const updateData: any = {};
+		const updateData: UserUpdateData = {};
 
 		if (name) updateData.name = name;
 		if (email) updateData.email = email;
@@ -66,4 +73,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 		console.error("DELETE user error:", error);
 		return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
 	}
+
+
+
 }
