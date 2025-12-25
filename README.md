@@ -1,8 +1,8 @@
-🧩 DevBoard
+# DevBoard
 
 DevBoard is a full-stack project management platform designed to help teams organize work, track progress, and collaborate efficiently. It provides structured boards, sprints, and tasks, making it easy to manage projects from planning to completion.
 
-✨ Features
+### ✨ Features
 
 User authentication and authorization
 
