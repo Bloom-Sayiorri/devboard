@@ -1,22 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
 export default function LoginPage() {
 	const router = useRouter();
-	const { status } = useSession();
 	const [userData, setUserData] = useState({ email: "", password: "" });
 	const [errors, setErrors] = useState("");
-
-	useEffect(() => {
-		if (status === "authenticated") {
-			router.push("/");
-		}
-	}, [status, router]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
@@ -26,14 +19,16 @@ export default function LoginPage() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const res = await signIn("credentials", {
-			redirect: false,
+		const result = await signIn("credentials", {
 			email: userData.email,
 			password: userData.password,
+			redirect: false,
 		});
-
-		if (res?.error) setErrors("Invalid email or password");
-		else setErrors("");
+		if (result?.error) {
+			setErrors(result.error || "Invalid email or password.");
+			return;
+		}
+		router.push("/boards");
 	};
 
 	return (
@@ -49,7 +44,7 @@ export default function LoginPage() {
 					onClick={() => signIn("google", { callbackUrl: "/boards" })}
 					className="flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2.5 text-gray-700 font-medium hover:bg-blue-600 hover:text-white transition duration-200">
 					<FcGoogle className="text-xl" />
-					<span>Sign in with Google</span>
+					<span>Login in with Google</span>
 				</button>
 
 				<div className="flex items-center gap-3">
@@ -85,7 +80,7 @@ export default function LoginPage() {
 							name="password"
 							value={userData.password}
 							onChange={handleChange}
-							placeholder="••••••••"
+							placeholder="password"
 							className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							required
 						/>

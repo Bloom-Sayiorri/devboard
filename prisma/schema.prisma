@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
@@ -11,26 +5,24 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DB_URL")
+  url = env("DATABASE_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
+  id            String         @id @default(cuid())
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   emailVerified DateTime?
-  password      String? // optional for non-auth users
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
+  name          String?
+  password      String?
+  accounts      Account[]
   boards        BoardMember[]
-  tasks         Task[]         @relation("AssignedTasks")
   comments      Comment[]
   notifications Notification[]
-
-  accounts Account[]
-  sessions Session[]
+  sessions      Session[]
+  tasks         Task[]         @relation("AssignedTasks")
 }
 
 model Account {
@@ -45,10 +37,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -57,10 +48,10 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  id           String   @id @default(cuid())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -72,56 +63,47 @@ model VerificationToken {
 }
 
 model Board {
-  id          Int        @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
   description String?
   image       String?
-  visibility  VISIBILITY @default(PUBLIC)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  members BoardMember[]
-  tasks   Task[]
-  sprints Sprint[]
+  visibility  VISIBILITY    @default(PUBLIC)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  members     BoardMember[]
+  sprints     Sprint[]
+  tasks       Task[]
 }
 
 model BoardMember {
-  id   Int  @id @default(autoincrement())
-  role ROLE @default(REGULAR)
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  board   Board @relation(fields: [boardId], references: [id])
+  id      Int    @id @default(autoincrement())
+  role    ROLE   @default(REGULAR)
+  userId  String
   boardId Int
+  board   Board  @relation(fields: [boardId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String?
-  priority    PRIORITY  @default(MEDIUM)
-  status      STATUS    @default(PENDING)
-  dueDate     DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  board   Board @relation(fields: [boardId], references: [id])
-  boardId Int
-
-  sprint   Sprint? @relation(fields: [sprintId], references: [id])
-  sprintId Int?
-
-  assignedTo   User?   @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String?
+  priority     PRIORITY    @default(MEDIUM)
+  status       STATUS      @default(PENDING)
+  dueDate      DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  boardId      Int
+  sprintId     Int?
   assignedToId String?
-
-  parentTask   Task?  @relation("Subtasks", fields: [parentTaskId], references: [id])
   parentTaskId Int?
-  subtasks     Task[] @relation("Subtasks")
-
-  comments Comment[]
-  labels   TaskLabel[]
+  comments     Comment[]
+  assignedTo   User?       @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  board        Board       @relation(fields: [boardId], references: [id])
+  parentTask   Task?       @relation("Subtasks", fields: [parentTaskId], references: [id])
+  subtasks     Task[]      @relation("Subtasks")
+  sprint       Sprint?     @relation(fields: [sprintId], references: [id])
+  labels       TaskLabel[]
 }
 
 model Comment {
@@ -129,28 +111,24 @@ model Comment {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  task   Task @relation(fields: [taskId], references: [id])
-  taskId Int
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  taskId    Int
+  userId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Label {
-  id    Int     @id @default(autoincrement())
+  id    Int         @id @default(autoincrement())
   name  String
   color String?
-
   tasks TaskLabel[]
 }
 
 model TaskLabel {
-  task   Task @relation(fields: [taskId], references: [id])
-  taskId Int
-
-  label   Label @relation(fields: [labelId], references: [id])
+  taskId  Int
   labelId Int
+  label   Label @relation(fields: [labelId], references: [id])
+  task    Task  @relation(fields: [taskId], references: [id])
 
   @@id([taskId, labelId])
 }
@@ -161,11 +139,9 @@ model Sprint {
   startDate DateTime
   endDate   DateTime
   goal      String?
-
-  board   Board @relation(fields: [boardId], references: [id])
-  boardId Int
-
-  tasks Task[]
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id])
+  tasks     Task[]
 }
 
 model Notification {
@@ -173,9 +149,8 @@ model Notification {
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum ROLE {

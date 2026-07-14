@@ -48,7 +48,7 @@
 // 	pages: {
 // 		signIn: "/login",
 // 		// signOut: "/signup",
-// 		// error: "/login", // redirect on error
+// 		// error: "/login", //  on error
 // 	},
 // 	secret: process.env.NEXTAUTH_SECRET,
 // });

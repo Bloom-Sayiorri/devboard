@@ -3,7 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
 export default function Signup() {
@@ -11,12 +11,6 @@ export default function Signup() {
 	const { status } = useSession();
 	const [userData, setUserData] = useState({ name: "", email: "", password: "" });
 	const [errors, setErrors] = useState("");
-
-	useEffect(() => {
-		if (status === "authenticated") {
-			router.push("/");
-		}
-	}, [status, router]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
@@ -31,12 +25,18 @@ export default function Signup() {
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ name, email, password }),
 		});
-		if (res.ok) {
-			router.push("/login");
-		} else {
-			const error = await res.json();
-			setErrors(JSON.stringify(error));
+		const data = await res.json();
+		if (!res.ok) {
+			setErrors(data.message || "Input data in the correct format.");
+			return;
 		}
+		const result = await signIn("credentials", {
+		email, password, redirect: false,
+		})
+		if (result?.error) {
+			setErrors(result.error);
+		}
+		router.push("/login");
 	};
 
 	return (
@@ -53,7 +53,7 @@ export default function Signup() {
 					onClick={() => signIn("google", { callbackUrl: "/" })}
 					className="flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2.5 text-gray-700 font-medium hover:bg-blue-600 hover:text-white transition duration-200">
 					<FcGoogle className="text-xl" />
-					<span>Sign in with Google</span>
+					<span>Sign up with Google</span>
 				</button>
 
 				<div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ export default function Signup() {
 							name="password"
 							value={userData.password}
 							onChange={handleChange}
-							placeholder="••••••••"
+							placeholder="password"
 							className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							required
 						/>
