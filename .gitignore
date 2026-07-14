@@ -44,3 +44,6 @@ LAYOUT.md
 /app/generated/prisma
 /ui/pages/login.tsx
 /ui/pages/signup.tsx
+/prisma/app/generated/prisma
+
+/app/generated/prisma
