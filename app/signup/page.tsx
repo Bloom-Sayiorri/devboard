@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,7 +8,6 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function Signup() {
 	const router = useRouter();
-	const { status } = useSession();
 	const [userData, setUserData] = useState({ name: "", email: "", password: "" });
 	const [errors, setErrors] = useState("");
 
