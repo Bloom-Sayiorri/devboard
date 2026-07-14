@@ -36,7 +36,7 @@ export default function AboutPage() {
 					},
 					{
 						title: "Integrations",
-						desc: "Connect your favorite tools like GitHub, Slack, and Notion to streamline your workflow.",
+						desc: "Connect your favorite tools like GitHub, Slack, and Notion to streamline your workflows.",
 						icon: "🔗",
 					},
 				].map((feature, index) => (
