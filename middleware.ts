@@ -53,9 +53,11 @@
 //   ],
 // };
 
-export { default } from "next-auth/middleware";
+// export { default } from "next-auth/middleware";
 
-export const config = {
-	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|).*)"],
-	runtime: "nodejs",
-};
+// export const config = {
+// 	matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png|).*)"],
+// 	runtime: "nodejs",
+// };
+
+export { auth as middleware } from "@/auth";

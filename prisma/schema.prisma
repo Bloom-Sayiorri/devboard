@@ -1,10 +1,27 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  emailVerified DateTime?
+  image         String?
+  name          String?
+  password      String?
+  accounts      Account[]
+  boards        BoardMember[]
+  comments      Comment[]
+  notifications Notification[]
+  sessions      Session[]
+  tasks         Task[]         @relation("AssignedTasks")
 }
 
 model Account {
@@ -20,10 +37,28 @@ model Account {
   id_token          String?
   session_state     String?
   createdAt         DateTime @default(now())
-  updatedAt         DateTime
-  User              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  id           String   @id @default(cuid())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
 }
 
 model Board {
@@ -33,10 +68,10 @@ model Board {
   image       String?
   visibility  VISIBILITY    @default(PUBLIC)
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime
-  BoardMember BoardMember[]
+  updatedAt   DateTime      @updatedAt
+  members     BoardMember[]
   sprints     Sprint[]
-  tasks        Task[]
+  tasks       Task[]
 }
 
 model BoardMember {
@@ -46,54 +81,6 @@ model BoardMember {
   boardId Int
   board   Board  @relation(fields: [boardId], references: [id])
   user    User   @relation(fields: [userId], references: [id])
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  taskId    Int
-  userId    String
-  task      Task     @relation(fields: [taskId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-model Label {
-  id        Int         @id @default(autoincrement())
-  name      String
-  color     String?
-  tasks TaskLabel[]
-}
-
-model Notification {
-  id        Int      @id @default(autoincrement())
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime
-  id           String   @id
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Sprint {
-  id        Int      @id @default(autoincrement())
-  name      String
-  startDate DateTime
-  endDate   DateTime
-  goal      String?
-  boardId   Int
-  board     Board    @relation(fields: [boardId], references: [id])
-  tasks     Task[]
 }
 
 model Task {
@@ -118,6 +105,24 @@ model Task {
   labels       TaskLabel[]
 }
 
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  taskId    Int
+  userId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Label {
+  id    Int         @id @default(autoincrement())
+  name  String
+  color String?
+  tasks TaskLabel[]
+}
+
 model TaskLabel {
   taskId  Int
   labelId Int
@@ -127,36 +132,24 @@ model TaskLabel {
   @@id([taskId, labelId])
 }
 
-model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  emailVerified DateTime?
-  image         String?
-  name          String?
-  password      String?
-  accounts       Account[]
-  boards   BoardMember[]
-  comments       Comment[]
-  notifications  Notification[]
-  sessions       Session[]        
-  tasks Task[] @relation("AssignedTasks")
+model Sprint {
+  id        Int      @id @default(autoincrement())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  goal      String?
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id])
+  tasks     Task[]
 }
 
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
-}
-
-enum PRIORITY {
-  LOW
-  MEDIUM
-  HIGH
-  URGENT
+model Notification {
+  id        Int      @id @default(autoincrement())
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum ROLE {
@@ -169,6 +162,13 @@ enum STATUS {
   STARTED
   ONGOING
   DONE
+}
+
+enum PRIORITY {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
 
 enum VISIBILITY {

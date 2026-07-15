@@ -20,7 +20,7 @@
 // }
 
 import { NextResponse } from "next/server.js";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { hash } from "bcrypt";
 
 export async function POST(req: Request) {

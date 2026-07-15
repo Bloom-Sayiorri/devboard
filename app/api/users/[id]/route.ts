@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server.js";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
 type UserUpdateData = {
