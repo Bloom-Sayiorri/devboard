@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ["lh3.googleusercontent.com"],
 	},
+	serverExternalPackages: [
+		"@prisma/client",
+		"@prisma/adapter-pg",
+		"pg"
+	],
 	// defaultRuntime: "nodejs",
 };
 

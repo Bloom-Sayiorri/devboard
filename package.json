@@ -17,6 +17,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
@@ -32,7 +33,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/adapter-pg": "^7.8.0",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
