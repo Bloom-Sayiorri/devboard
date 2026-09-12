@@ -56,7 +56,7 @@ export default function Page() {
 					{user?.image}
 				</section>
 			) : (
-				<div className="h-full w-full flex flex-col justify-center items-center border-2 border-red-500">
+				<div className="h-full w-full flex flex-col justify-center items-center">
 					<Modal toggleModal={toggleModal} />
 				</div>
 			)}

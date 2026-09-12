@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Logo from "./logo";
-import { Bell, CircleQuestionMark, CircleUserRound, Moon, Settings, SunMedium, X } from "lucide-react";
+import { Bell, CircleQuestionMark, CircleUserRound, Settings, X } from "lucide-react";
 import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
