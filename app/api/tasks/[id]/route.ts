@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server.js";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	const { id: idString } = await params;
 	const id = Number(idString);
 
@@ -133,8 +133,4 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 // 		console.error("DELETE task error:", error);
 // 		return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
 // 	}
-
-
-
-
 // }

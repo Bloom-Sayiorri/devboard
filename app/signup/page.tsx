@@ -16,7 +16,7 @@ export default function Signup() {
 		setUserData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { name, email, password } = userData;
 		const res = await fetch("/api/auth/signup", {
@@ -30,16 +30,18 @@ export default function Signup() {
 			return;
 		}
 		const result = await signIn("credentials", {
-		email, password, redirect: false,
-		})
+			email,
+			password,
+			redirect: false,
+		});
 		if (result?.error) {
 			setErrors(result.error);
 		}
-		router.push("/login");
+		router.replace("/");
 	};
 
 	return (
-		<main className="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-300 via-cyan-500 to-blue-400 px-4 sm:px-6">
+		<main className="flex min-h-screen items-center justify-center bg-linear-to-r from-blue-300 via-cyan-500 to-blue-400 px-4 sm:px-6">
 			<section className="w-full max-w-md bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col gap-6">
 				{/* Header */}
 				<div className="text-center">
@@ -50,7 +52,7 @@ export default function Signup() {
 				<button
 					type="button"
 					onClick={() => signIn("google", { callbackUrl: "/" })}
-					className="flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2.5 text-gray-700 font-medium hover:bg-blue-600 hover:text-white transition duration-200">
+					className="flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-2.5 text-gray-700 font-medium hover:bg-blue-600 hover:text-white transition duration-200 cursor-pointer">
 					<FcGoogle className="text-xl" />
 					<span>Sign up with Google</span>
 				</button>
@@ -67,12 +69,12 @@ export default function Signup() {
 							Username
 						</label>
 						<input
-							type="name"
+							type="text"
 							id="name"
 							name="name"
 							value={userData.name}
 							onChange={handleChange}
-							placeholder="you@example.com"
+							placeholder="John Doe"
 							className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							required
 						/>
@@ -88,7 +90,7 @@ export default function Signup() {
 							name="email"
 							value={userData.email}
 							onChange={handleChange}
-							placeholder="you@example.com"
+							placeholder="johndoe@example.com"
 							className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							required
 						/>
@@ -104,7 +106,7 @@ export default function Signup() {
 							name="password"
 							value={userData.password}
 							onChange={handleChange}
-							placeholder="password"
+							placeholder="******"
 							className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
 							required
 						/>
@@ -112,7 +114,7 @@ export default function Signup() {
 
 					<button
 						type="submit"
-						className="mt-2 w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition">
+						className="mt-2 w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 transition cursor-pointer">
 						Submit
 					</button>
 
@@ -128,4 +130,5 @@ export default function Signup() {
 			</section>
 		</main>
 	);
+
 }

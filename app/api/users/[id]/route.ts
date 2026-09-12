@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from "next/server.js";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { userSelect } from "@/types/user";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
 type UserUpdateData = {
 	name?: string;
@@ -11,15 +14,18 @@ type UserUpdateData = {
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
 	const id = (await params).id;
+	const session = await getServerSession(authOptions);
+	const userId = session?.user?.id;
+	if (!userId) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+	}
+	if (session.user.id !== id) {
+		return Response.json({ error: "Forbidden" }, { status: 403 });
+	}
 	try {
 		const user = await prisma.user.findUnique({
 			where: { id },
-			include: {
-				boards: true,
-				tasks: true,
-				comments: true,
-				notifications: true,
-			},
+			select: userSelect,
 		});
 
 		if (!user) {
@@ -73,7 +79,5 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 		console.error("DELETE user error:", error);
 		return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
 	}
-
-
-
 }
+

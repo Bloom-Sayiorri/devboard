@@ -28,18 +28,18 @@ export default function Navbar() {
 	];
 
 	return (
-		<header className="w-full border-b border-gray-200 bg-white dark:bg-gray-900">
+		<header className="w-full border-b border-gray-200 bg-white dark:bg-gray-900 px-4 md:px-10">
 			<div className="flex justify-between items-center px-3 py-3">
 				<div className="flex gap-2 items-center justify-center">
 					<Logo />
 					<Link href="/" className="flex items-center gap-1 text-lg font-semibold">
-						<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
+						<h1 className="font-breeserif text-2xl sm:text-4xl font-bold bg-linear-to-r from-blue-300 via-cyan-500  to-blue-500 bg-clip-text text-transparent">
 							Dev<span className="">Board</span>
 						</h1>
 					</Link>
 				</div>
 
-				<nav className="hidden sm:flex gap-3 items-center text-gray-800 dark:text-gray-200">
+				<nav className="hidden sm:flex gap-6 items-center text-gray-800 dark:text-gray-200">
 					{links.map(({ href, label }) => {
 						const isActive = pathname === href;
 
@@ -68,8 +68,8 @@ export default function Navbar() {
 							Signup
 						</button>
 					)}
-					{
-						<button
+					{session?.user ? 
+						(<button
 							className="relative w-10 h-10 rounded-full overflow-hidden shadow-md cursor-pointer flex items-center justify-center bg-gray-200 dark:bg-gray-700"
 							onClick={() => setIsModalOpen((prev) => !prev)}>
 							{/* If user has image */}
@@ -78,7 +78,7 @@ export default function Navbar() {
 							) : (
 								<CircleUserRound className="w-7 h-7 text-gray-500" />
 							)}
-						</button>
+						</button>) : <></>
 					}
 					{isModalOpen ? (
 						<div className="absolute top-14 right-1 mt-2 w-38 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 flex flex-col justify-center items-start gap-3 text-gray-700 dark:text-gray-300 z-50">

@@ -25,20 +25,19 @@
 
 @layer base {
 	h3 {
-		@apply font-bold;
+		font-weight: bold;
 	}
-	/* button {
-		@apply rounded-lg;
-	} */
-
-	/* input {
-		@apply border border-gray-300 pl-3 py-2.5 rounded-md cursor-pointer focus:border-sky-500 focus:outline focus:outline-sky-500;
-	} */
+	button {
+		cursor: pointer;
+	}
 }
 
 @layer utilities {
 	.profileTitle {
-		@apply text-stone-400 text-xs uppercase;
+		/* @apply text-stone-400 text-xs uppercase; */
+		color: #a6a09b;
+		font-size: 12px;
+		text-transform: uppercase;
 	}
 }
 

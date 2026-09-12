@@ -10,12 +10,10 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 	const hideLayout = ["/login", "/signup"].includes(pathname);
 
 	return (
-		<>
-			<SessionProvider>
-				{!hideLayout && <Navbar />}
-				<main className="flex-grow">{children}</main>
-				{!hideLayout && <Footer />}
-			</SessionProvider>
-		</>
+		<SessionProvider>
+			{!hideLayout && <Navbar />}
+			<main className="flex-1">{children}</main>
+			{!hideLayout && <Footer />}
+		</SessionProvider>
 	);
 }

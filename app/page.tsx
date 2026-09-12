@@ -9,9 +9,9 @@ export default function HomePage() {
 	const { data: session } = useSession();
 	return (
 		<div className="min-h-screen flex flex-col">
-			<section className="flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 text-white">
+			<section className="flex flex-col items-center justify-center text-center px-6 py-20 bg-linear-to-r from-blue-400 via-cyan-400 to-blue-500 text-white">
 				<motion.h1
-					className="text-4xl md:text-6xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200"
+					className="text-4xl md:text-6xl font-bold leading-tight bg-clip-text text-transparent bg-linear-to-r from-white to-gray-200"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.6 }}>

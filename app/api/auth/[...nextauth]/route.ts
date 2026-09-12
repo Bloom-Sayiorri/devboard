@@ -4,9 +4,3 @@ import { authOptions } from "@/auth";
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
-
-// import { handlers } from "@/auth";
-
-// export const runtime = "nodejs";
-
-// export const { GET, POST } = handlers;
